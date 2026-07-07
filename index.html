@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClarityCut • AI Background Remover</title>
+    <meta name="description" content="Remove image backgrounds instantly with AI. Professional, fast, and free.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <span>ClarityCut</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">Home</a>
+                <a href="#" class="nav-link">Pricing</a>
+                <a href="#" class="nav-link">Examples</a>
+                <a href="#" class="nav-link">API</a>
+            </div>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn-secondary">Sign in</button>
+                <button class="btn-primary">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="badge">Powered by AI • Instant Results</div>
+            <h1 class="hero-title">Remove backgrounds.<br>Instantly. Beautifully.</h1>
+            <p class="hero-subtitle">Professional AI background removal. No sign-up. No watermarks. High-quality transparent PNGs in seconds.</p>
+            
+            <div class="upload-area" id="upload-area">
+                <div class="upload-prompt">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Drop your image here</h3>
+                    <p>or</p>
+                    <button id="browse-btn" class="btn-primary">Browse Files</button>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                    <p class="supported-formats">Supports JPG, PNG, WEBP • Max 10MB</p>
+                </div>
+            </div>
+
+            <div class="trust-badges">
+                <div class="trust-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>Fast</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-infinity"></i>
+                    <span>Unlimited Free</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <main class="app-container" id="app-container" style="display: none;">
+        <div class="app-header">
+            <button id="new-upload" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> New Image
+            </button>
+            <div class="file-info" id="file-info">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <div class="workspace">
+            <!-- Upload / Processing View -->
+            <div id="upload-view" class="view">
+                <div class="preview-grid">
+                    <div class="preview-card">
+                        <div class="preview-header">
+                            <span>Original</span>
+                        </div>
+                        <div class="image-preview" id="original-preview">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results View -->
+            <div id="results-view" class="view" style="display: none;">
+                <div class="results-header">
+                    <div class="compare-toggle">
+                        <button id="view-side" class="toggle-btn active">Side by Side</button>
+                        <button id="view-slider" class="toggle-btn">Slider</button>
+                    </div>
+                </div>
+
+                <div class="preview-grid results-grid" id="side-by-side">
+                    <div class="preview-card">
+                        <div class="preview-header">
+                            <span>Original</span>
+                        </div>
+                        <div class="image-container">
+                            <img id="original-image" alt="Original" class="result-image">
+                            <div class="checkerboard-bg"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-card">
+                        <div class="preview-header">
+                            <span>Background Removed</span>
+                            <button id="download-btn" class="btn-primary download-btn">
+                                <i class="fas fa-download"></i> Download PNG
+                            </button>
+                        </div>
+                        <div class="image-container">
+                            <img id="result-image" alt="Result" class="result-image">
+                            <div class="checkerboard-bg"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Before/After Slider -->
+                <div id="slider-view" class="view" style="display: none;">
+                    <div class="slider-container">
+                        <div class="slider-wrapper">
+                            <img id="slider-original" class="slider-image" alt="Original">
+                            <div class="slider-overlay">
+                                <img id="slider-result" class="slider-image" alt="Result">
+                            </div>
+                            <div class="slider-divider" id="slider-divider">
+                                <div class="slider-handle">
+                                    <i class="fas fa-grip-lines-vertical"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-panel">
+            <button id="remove-bg-btn" class="btn-primary remove-btn">
+                <i class="fas fa-magic"></i>
+                <span>Remove Background</span>
+            </button>
+            
+            <div class="extra-actions">
+                <button id="copy-btn" class="action-btn">
+                    <i class="fas fa-copy"></i>
+                    Copy
+                </button>
+                <button id="zoom-btn" class="action-btn">
+                    <i class="fas fa-search"></i>
+                    Zoom
+                </button>
+                <button id="retry-btn" class="action-btn" style="display: none;">
+                    <i class="fas fa-redo"></i>
+                    Retry
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Removing background...</h3>
+            <p class="progress-text">This usually takes 3-8 seconds</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" style="display: none;">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 ClarityCut. Built as a demonstration of modern web craftsmanship.</p>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
